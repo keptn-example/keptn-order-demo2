@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: customer-primary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-primary
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: customer-primary
+    spec:
+      containers:
+      - env:
+        - name: DT_CUSTOM_PROP
+          value: keptn_project=keptnorder keptn_service=customer keptn_stage=production
+            keptn_deployment=primary
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DEPLOYMENT_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['deployment']
+        - name: CONTAINER_IMAGE
+          value: robjahn/keptn-orders-customer-service:1
+        - name: KEPTN_PROJECT
+          value: keptnorder
+        - name: KEPTN_STAGE
+          value: production
+        - name: KEPTN_SERVICE
+          value: customer
+        - name: KEPTN_DEPLOYMENT
+          value: canary
+        image: robjahn/keptn-orders-customer-service:1
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 15
+        name: customer
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 15
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+status: {}
