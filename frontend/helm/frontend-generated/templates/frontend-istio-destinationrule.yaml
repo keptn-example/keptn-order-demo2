@@ -1,0 +1,7 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  creationTimestamp: null
+  name: frontend
+spec:
+  host: frontend.keptnorder-staging.svc.cluster.local
