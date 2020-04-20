@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  creationTimestamp: null
+  name: order
+spec:
+  gateways:
+  - public-gateway.istio-system
+  - mesh
+  hosts:
+  - order.keptnorder-staging.34.76.37.47.xip.io
+  - order
+  http:
+  - route:
+    - destination:
+        host: order.keptnorder-staging.svc.cluster.local
